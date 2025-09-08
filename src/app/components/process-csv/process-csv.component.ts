@@ -25,7 +25,7 @@ export class ProcessCsvComponent implements OnInit {
   selectedFile: string = '';
   message: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loadFiles();
@@ -45,10 +45,6 @@ export class ProcessCsvComponent implements OnInit {
       return;
     }
 
-    // // Construct backend absolute paths
-    // const excelPath = this.isWindows()
-    //   ? `C:\\var\\log\\applications\\API\\dataprocessing\\${this.selectedFile}`
-    //   : `/var/log/applications/API/dataprocessing/${this.selectedFile}`;
     const csvName = this.selectedFile.replace('.xlsx', '.csv');
 
     const params = new HttpParams()
@@ -61,8 +57,4 @@ export class ProcessCsvComponent implements OnInit {
         error: err => this.message = 'Error converting Excel to CSV'
       });
   }
-
-  // isWindows(): boolean {
-  //   return navigator.platform.toLowerCase().includes('win');
-  // }
 }

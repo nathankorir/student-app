@@ -14,24 +14,20 @@
     Upload CSV
   </button>
   <button mat-raised-button color="primary" (click)="downloadExcelReport()">
-  Export Excel Report
-</button>
-<button mat-raised-button color="primary" (click)="downloadCsvReport()">
-  Download CSV Report
-</button>
+    Export Excel Report
+  </button>
+  <button mat-raised-button color="primary" (click)="downloadCsvReport()">
+    Download CSV Report
+  </button>
 </div>
 
 <!-- Filters -->
 <div class="controls">
   <mat-form-field appearance="outline">
-  <mat-label>Search by Student ID</mat-label>
-  <input 
-    #idInput 
-    matInput 
-    [(ngModel)]="selectedStudentId"
-    (keyup.enter)="searchById($event)" 
-    placeholder="Enter ID and press Enter"/>
-</mat-form-field>
+    <mat-label>Search by Student ID</mat-label>
+    <input #idInput matInput [(ngModel)]="selectedStudentId" (keyup.enter)="searchById($event)"
+      placeholder="Enter ID and press Enter" />
+  </mat-form-field>
 
 
   <!-- Class Filter Dropdown -->
@@ -106,8 +102,6 @@
 </table>
 
 <!-- Paginator -->
-<mat-paginator [length]="totalElements"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="[10, 20, 50, 100]"
-               (page)="onPageChange($event)">
+<mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+  (page)="onPageChange($event)">
 </mat-paginator>

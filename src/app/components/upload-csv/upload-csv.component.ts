@@ -17,7 +17,7 @@ export class UploadCsvComponent implements OnInit {
   selectedFile: string = '';
   message: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.loadCsvFiles();
@@ -37,7 +37,6 @@ export class UploadCsvComponent implements OnInit {
       return;
     }
 
-    // const csvPath = `/var/log/applications/API/dataprocessing/${this.selectedFile}`;
     const params = new HttpParams().set('csvName', this.selectedFile);
 
     this.http.post('http://localhost:8080/api/data/upload', null, { params, responseType: 'text' })

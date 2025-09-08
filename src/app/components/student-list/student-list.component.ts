@@ -87,64 +87,37 @@ export class StudentListComponent implements OnInit {
     this.loadPage(0, this.pageSize);
   }
 
-  // searchById(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-  //   const studentId = input.value.trim();
-
-  //   if (!studentId) {
-  //     this.loadPage(this.pageNumber, this.pageSize);
-  //     this.errorMessage = '';
-  //     return;
-  //   }
-
-  //   this.dataService.getById(Number(studentId)).subscribe({
-  //     next: (student: Student) => {
-  //       this.students = [student];
-  //       this.totalElements = 1;
-  //       this.errorMessage = '';
-  //     },
-  //     error: (err) => {
-  //       if (err.status === 404) {
-  //         this.students = [];
-  //         this.totalElements = 0;
-  //         this.errorMessage = `Student with ID ${studentId} not found.`;
-  //       } else {
-  //         this.errorMessage = 'An error occurred. Please try again.';
-  //       }
-  //     }
-  //   });
-  // }
   selectedStudentId?: number;
 
-searchById(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const studentId = input.value.trim();
+  searchById(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const studentId = input.value.trim();
 
-  this.selectedStudentId = studentId ? Number(studentId) : undefined;
+    this.selectedStudentId = studentId ? Number(studentId) : undefined;
 
-  if (!studentId) {
-    this.loadPage(this.pageNumber, this.pageSize);
-    this.errorMessage = '';
-    return;
-  }
-
-  this.dataService.getById(Number(studentId)).subscribe({
-    next: (student: Student) => {
-      this.students = [student];
-      this.totalElements = 1;
+    if (!studentId) {
+      this.loadPage(this.pageNumber, this.pageSize);
       this.errorMessage = '';
-    },
-    error: (err) => {
-      if (err.status === 404) {
-        this.students = [];
-        this.totalElements = 0;
-        this.errorMessage = `Student with ID ${studentId} not found.`;
-      } else {
-        this.errorMessage = 'An error occurred. Please try again.';
-      }
+      return;
     }
-  });
-}
+
+    this.dataService.getById(Number(studentId)).subscribe({
+      next: (student: Student) => {
+        this.students = [student];
+        this.totalElements = 1;
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.students = [];
+          this.totalElements = 0;
+          this.errorMessage = `Student with ID ${studentId} not found.`;
+        } else {
+          this.errorMessage = 'An error occurred. Please try again.';
+        }
+      }
+    });
+  }
 
   resetFilters(idInput: HTMLInputElement) {
     this.selectedClass = '';
@@ -167,78 +140,78 @@ searchById(event: Event) {
   }
 
   downloadPdf(studentId: number) {
-  const url = `http://localhost:8080/api/data/students/${studentId}/export/pdf`;
+    const url = `http://localhost:8080/api/data/students/${studentId}/export/pdf`;
 
-  this.http.get(url, { responseType: 'blob' }).subscribe({
-    next: (blob) => {
-      const fileName = `student-${studentId}.pdf`;
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = fileName;
-      link.click();
-      window.URL.revokeObjectURL(link.href);
-    },
-    error: (err) => {
-      console.error('Error downloading PDF', err);
-      alert('Failed to download PDF');
-    }
-  });
-}
+    this.http.get(url, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const fileName = `student-${studentId}.pdf`;
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+      },
+      error: (err) => {
+        console.error('Error downloading PDF', err);
+        alert('Failed to download PDF');
+      }
+    });
+  }
 
-downloadExcelReport() {
-  this.isLoading = true;
+  downloadExcelReport() {
+    this.isLoading = true;
 
-  let params = new HttpParams();
-  if (this.selectedClass) params = params.set('className', this.selectedClass);
-  if (this.selectedStudentId) params = params.set('studentId', this.selectedStudentId.toString());
-
-  this.http.get('http://localhost:8080/api/data/students/export/excel', { 
-    params, 
-    responseType: 'blob' 
-  }).subscribe({
-    next: (blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'students.xlsx';
-      a.click();
-      window.URL.revokeObjectURL(url);
-      this.isLoading = false;
-    },
-    error: (err) => {
-      console.error('Error downloading Excel:', err);
-      this.isLoading = false;
-      this.errorMessage = 'Failed to download Excel report. Please try again.';
-    }
-  });
-}
-
-downloadCsvReport() {
-  this.isLoading = true;
     let params = new HttpParams();
-  if (this.selectedClass) params = params.set('className', this.selectedClass);
-  if (this.selectedStudentId) params = params.set('studentId', this.selectedStudentId.toString());
+    if (this.selectedClass) params = params.set('className', this.selectedClass);
+    if (this.selectedStudentId) params = params.set('studentId', this.selectedStudentId.toString());
+
+    this.http.get('http://localhost:8080/api/data/students/export/excel', {
+      params,
+      responseType: 'blob'
+    }).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'students.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error downloading Excel:', err);
+        this.isLoading = false;
+        this.errorMessage = 'Failed to download Excel report. Please try again.';
+      }
+    });
+  }
+
+  downloadCsvReport() {
+    this.isLoading = true;
+    let params = new HttpParams();
+    if (this.selectedClass) params = params.set('className', this.selectedClass);
+    if (this.selectedStudentId) params = params.set('studentId', this.selectedStudentId.toString());
 
 
-  this.http.get('http://localhost:8080/api/data/students/export/csv', {
-    params,
-    responseType: 'blob' // important for binary file
-  }).subscribe({
-    next: (blob: Blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'students.csv';
-      link.click();
-      window.URL.revokeObjectURL(url);
-      this.isLoading = false;
-    },
-    error: err => {
-      console.error(err);
-      this.isLoading = false;
-      this.errorMessage = 'Error downloading CSV';
-    }
-  });
-}
+    this.http.get('http://localhost:8080/api/data/students/export/csv', {
+      params,
+      responseType: 'blob'
+    }).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'students.csv';
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.isLoading = false;
+      },
+      error: err => {
+        console.error(err);
+        this.isLoading = false;
+        this.errorMessage = 'Error downloading CSV';
+      }
+    });
+  }
 
 }

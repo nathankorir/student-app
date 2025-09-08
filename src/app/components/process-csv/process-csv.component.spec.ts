@@ -10,7 +10,7 @@ describe('ProcessCsvComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProcessCsvComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ProcessCsvComponent);
     component = fixture.componentInstance;
