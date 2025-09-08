@@ -1,0 +1,18 @@
+<div class="csv-container">
+  <h2>Convert Excel to CSV</h2>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Select Excel File</mat-label>
+    <mat-select [(value)]="selectedFile">
+      <mat-option *ngFor="let file of files" [value]="file">
+        {{ file }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button color="accent" (click)="processCsv()" [disabled]="!selectedFile">
+    Convert to CSV
+  </button>
+
+  <p class="message" *ngIf="message">{{ message }}</p>
+</div>

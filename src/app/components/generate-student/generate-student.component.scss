@@ -1,0 +1,34 @@
+.generate-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+mat-form-field {
+  width: 200px;
+}
+
+.message {
+  margin-left: 15px;
+  color: green;
+  font-weight: bold;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7); // semi-transparent
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // above everything
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.6; // visually indicate disabled
+}

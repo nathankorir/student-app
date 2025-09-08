@@ -1,0 +1,18 @@
+<div class="upload-container">
+  <h2>Upload CSV to Database</h2>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Select CSV File</mat-label>
+    <mat-select [(value)]="selectedFile">
+      <mat-option *ngFor="let file of files" [value]="file">
+        {{ file }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="uploadCsv()" [disabled]="!selectedFile">
+    Upload to DB
+  </button>
+
+  <p class="message" *ngIf="message">{{ message }}</p>
+</div>

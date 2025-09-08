@@ -1,0 +1,16 @@
+<div class="overlay" *ngIf="isLoading">
+  <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+
+<div class="generate-container">
+  <mat-form-field appearance="outline">
+    <mat-label>Number of Records</mat-label>
+    <input matInput type="number" [(ngModel)]="recordCount" min="1" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" (click)="generateExcel()">
+    Generate Excel
+  </button>
+
+  <div class="message" *ngIf="message">{{ message }}</div>
+</div>

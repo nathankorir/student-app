@@ -1,0 +1,113 @@
+<div class="overlay" *ngIf="isLoading">
+  <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+
+<!-- Navigation / Actions -->
+<div class="controls">
+  <button mat-raised-button color="primary" (click)="goToGenerate()">
+    Generate Excel
+  </button>
+  <button mat-raised-button color="accent" (click)="goToProcessCsv()">
+    Process CSV
+  </button>
+  <button mat-raised-button color="warn" (click)="goToUploadCsv()">
+    Upload CSV
+  </button>
+  <button mat-raised-button color="primary" (click)="downloadExcelReport()">
+  Export Excel Report
+</button>
+<button mat-raised-button color="primary" (click)="downloadCsvReport()">
+  Download CSV Report
+</button>
+</div>
+
+<!-- Filters -->
+<div class="controls">
+  <mat-form-field appearance="outline">
+  <mat-label>Search by Student ID</mat-label>
+  <input 
+    #idInput 
+    matInput 
+    [(ngModel)]="selectedStudentId"
+    (keyup.enter)="searchById($event)" 
+    placeholder="Enter ID and press Enter"/>
+</mat-form-field>
+
+
+  <!-- Class Filter Dropdown -->
+  <mat-form-field appearance="outline">
+    <mat-label>Filter by Class</mat-label>
+    <mat-select [(value)]="selectedClass" (selectionChange)="filterByClass($event.value)">
+      <mat-option value="">All</mat-option>
+      <mat-option *ngFor="let c of classOptions" [value]="c">{{c}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Reset Filters Button -->
+  <button mat-raised-button color="warn" (click)="resetFilters(idInput)">Reset Filters</button>
+</div>
+
+<!-- Error message -->
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>
+
+<!-- Material Table -->
+<table mat-table [dataSource]="students" class="mat-elevation-z8" matSort>
+
+  <!-- Student ID Column -->
+  <ng-container matColumnDef="studentId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+    <td mat-cell *matCellDef="let student">{{ student.studentId }}</td>
+  </ng-container>
+
+  <!-- First Name Column -->
+  <ng-container matColumnDef="firstName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>First</th>
+    <td mat-cell *matCellDef="let student">{{ student.firstName }}</td>
+  </ng-container>
+
+  <!-- Last Name Column -->
+  <ng-container matColumnDef="lastName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Last</th>
+    <td mat-cell *matCellDef="let student">{{ student.lastName }}</td>
+  </ng-container>
+
+  <!-- DOB Column -->
+  <ng-container matColumnDef="dob">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>DOB</th>
+    <td mat-cell *matCellDef="let student">{{ student.dob }}</td>
+  </ng-container>
+
+  <!-- Class Column -->
+  <ng-container matColumnDef="className">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Class</th>
+    <td mat-cell *matCellDef="let student">{{ student.className }}</td>
+  </ng-container>
+
+  <!-- Score Column -->
+  <ng-container matColumnDef="score">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Score</th>
+    <td mat-cell *matCellDef="let student">{{ student.score }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let student">
+      <button mat-mini-fab color="primary" (click)="downloadPdf(student.studentId)">
+        <mat-icon>download</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <!-- Header and Row Definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<!-- Paginator -->
+<mat-paginator [length]="totalElements"
+               [pageSize]="pageSize"
+               [pageSizeOptions]="[10, 20, 50, 100]"
+               (page)="onPageChange($event)">
+</mat-paginator>
