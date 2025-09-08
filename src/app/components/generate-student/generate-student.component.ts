@@ -39,7 +39,7 @@ export class GenerateStudentComponent {
     this.message = '';
 
     this.http.post(
-      'http://localhost:8080/api/data/generate?count=' + this.recordCount,
+      'http://localhost:8080/api/excel/generate?count=' + this.recordCount,
       null,
       { responseType: 'text' }
     ).subscribe({

@@ -140,7 +140,7 @@ export class StudentListComponent implements OnInit {
   }
 
   downloadPdf(studentId: number) {
-    const url = `http://localhost:8080/api/data/students/${studentId}/export/pdf`;
+    const url = `http://localhost:8080/api/students/${studentId}/export/pdf`;
 
     this.http.get(url, { responseType: 'blob' }).subscribe({
       next: (blob) => {
@@ -165,7 +165,7 @@ export class StudentListComponent implements OnInit {
     if (this.selectedClass) params = params.set('className', this.selectedClass);
     if (this.selectedStudentId) params = params.set('studentId', this.selectedStudentId.toString());
 
-    this.http.get('http://localhost:8080/api/data/students/export/excel', {
+    this.http.get('http://localhost:8080/api/excel/export', {
       params,
       responseType: 'blob'
     }).subscribe({
@@ -193,7 +193,7 @@ export class StudentListComponent implements OnInit {
     if (this.selectedStudentId) params = params.set('studentId', this.selectedStudentId.toString());
 
 
-    this.http.get('http://localhost:8080/api/data/students/export/csv', {
+    this.http.get('http://localhost:8080/api/csv/export', {
       params,
       responseType: 'blob'
     }).subscribe({

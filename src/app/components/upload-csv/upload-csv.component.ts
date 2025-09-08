@@ -4,11 +4,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-upload-csv',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatSelectModule, FormsModule],
+  imports: [CommonModule, MatButtonModule, MatSelectModule, FormsModule, MatProgressSpinnerModule],
   templateUrl: './upload-csv.component.html',
   styleUrls: ['./upload-csv.component.scss']
 })
@@ -16,6 +17,7 @@ export class UploadCsvComponent implements OnInit {
   files: string[] = [];
   selectedFile: string = '';
   message: string = '';
+  isLoading = false;
 
   constructor(private http: HttpClient) { }
 
@@ -24,7 +26,7 @@ export class UploadCsvComponent implements OnInit {
   }
 
   loadCsvFiles() {
-    this.http.get<string[]>('http://localhost:8080/api/data/files?type=csv')
+    this.http.get<string[]>('http://localhost:8080/api/files?type=csv')
       .subscribe({
         next: data => this.files = data,
         error: err => this.message = 'Error loading CSV files from server'
@@ -39,10 +41,22 @@ export class UploadCsvComponent implements OnInit {
 
     const params = new HttpParams().set('csvName', this.selectedFile);
 
-    this.http.post('http://localhost:8080/api/data/upload', null, { params, responseType: 'text' })
-      .subscribe({
-        next: res => this.message = res,
-        error: err => this.message = 'Error uploading CSV to DB'
-      });
+    this.isLoading = true;
+    this.message = '';
+
+    this.http.post('http://localhost:8080/api/csv/upload', null, {
+      params,
+      responseType: 'text'
+    }).subscribe({
+      next: res => {
+        this.message = res;
+        this.isLoading = false;
+      },
+      error: err => {
+        console.error('Error uploading CSV:', err);
+        this.message = 'Error uploading CSV to DB';
+        this.isLoading = false;
+      }
+    });
   }
 }

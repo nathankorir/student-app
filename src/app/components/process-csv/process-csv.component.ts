@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-process-csv',
@@ -14,7 +15,8 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatButtonModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './process-csv.component.html',
   styleUrls: ['./process-csv.component.scss']
@@ -24,6 +26,7 @@ export class ProcessCsvComponent implements OnInit {
   files: string[] = [];
   selectedFile: string = '';
   message: string = '';
+  isLoading = false;
 
   constructor(private http: HttpClient) { }
 
@@ -32,7 +35,7 @@ export class ProcessCsvComponent implements OnInit {
   }
 
   loadFiles() {
-    this.http.get<string[]>('http://localhost:8080/api/data/files?type=excel')
+    this.http.get<string[]>('http://localhost:8080/api/files?type=excel')
       .subscribe({
         next: data => this.files = data,
         error: err => this.message = 'Error loading files from server'
@@ -51,10 +54,22 @@ export class ProcessCsvComponent implements OnInit {
       .set('excelName', this.selectedFile)
       .set('csvName', csvName);
 
-    this.http.post('http://localhost:8080/api/data/convert', null, { params, responseType: 'text' })
-      .subscribe({
-        next: msg => this.message = msg,
-        error: err => this.message = 'Error converting Excel to CSV'
-      });
+    this.isLoading = true;
+    this.message = '';
+
+    this.http.post('http://localhost:8080/api/csv/convert', null, {
+      params,
+      responseType: 'text'
+    }).subscribe({
+      next: msg => {
+        this.message = msg;
+        this.isLoading = false;
+      },
+      error: err => {
+        console.error('Error converting Excel:', err);
+        this.message = 'Error converting Excel to CSV';
+        this.isLoading = false;
+      }
+    });
   }
 }
